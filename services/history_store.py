@@ -2,34 +2,26 @@
 import json
 import os
 
-# Define the JSON file path used to store user chat or session history
-FILE = "healthbackend/storage/history.json"
+# Base dir: .../healthbackend
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+STORAGE_DIR = os.path.join(BASE_DIR, "storage")
+FILE = os.path.join(STORAGE_DIR, "history.json")
 
 
-# ------------------------------------------------------------
-# Load function
-# ------------------------------------------------------------
-# Purpose: Read and return the stored data from the history file.
-# Returns an empty dictionary if the file doesn't exist.
 def load():
+    """Read and return the stored data from the history file."""
     if not os.path.exists(FILE):
-        # If no history file exists, return an empty dictionary
         return {}
-    # Open the existing file and load its JSON content
     with open(FILE, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
-# ------------------------------------------------------------
-# Save function
-# ------------------------------------------------------------
-# Purpose: Write the given data back into the JSON file, creating directories if needed.
-def save(data):
-    # Ensure the directory structure exists before writing the file
-    os.makedirs(os.path.dirname(FILE), exist_ok=True)
-    # Write the data as formatted JSON with indentation for readability
+def save(data: dict):
+    """Persist the given history dict to the JSON file."""
+    os.makedirs(STORAGE_DIR, exist_ok=True)
     with open(FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
 
 
 # ------------------------------------------------------------
